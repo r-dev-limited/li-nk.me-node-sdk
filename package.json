@@ -1,0 +1,52 @@
+{
+    "name": "@li-nk/node-sdk",
+    "version": "0.1.0",
+    "type": "module",
+    "description": "Official li-nk.me Node.js client for administering links via the Edge API.",
+    "license": "Apache-2.0",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "default": "./dist/index.js"
+        }
+    },
+    "files": [
+        "dist",
+        "README.md",
+        "LICENSE"
+    ],
+    "scripts": {
+        "build": "tsc -p tsconfig.json",
+        "watch": "tsc -p tsconfig.json --watch --preserveWatchOutput",
+        "test": "jest",
+        "test:watch": "jest --watch",
+        "prepublishOnly": "npm run build"
+    },
+    "engines": {
+        "node": ">=18"
+    },
+    "sideEffects": false,
+    "keywords": [
+        "li-nk",
+        "linkme",
+        "universal-links",
+        "deeplinks",
+        "sdk",
+        "node"
+    ],
+    "dependencies": {
+        "zod": "^3.23.8"
+    },
+    "devDependencies": {
+        "@types/jest": "^29.5.12",
+        "jest": "^29.7.0",
+        "ts-jest": "^29.2.5",
+        "ts-mockito": "^2.6.1",
+        "typescript": "^5.5.4"
+    },
+    "publishConfig": {
+        "access": "public"
+    }
+}
