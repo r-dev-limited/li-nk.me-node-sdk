@@ -5,11 +5,11 @@ import { CreateLinkInput, Link, NodeSDKOptions, UpdateLinkInput } from './models
 export class LinkMeClient {
     private readonly linkService: LinkService;
 
-    constructor(opts: NodeSDKOptions) {
-        if (!opts?.baseUrl) throw new Error('baseUrl is required');
+    constructor(opts: NodeSDKOptions = {}) {
+        const baseUrl = opts?.baseUrl || 'https://li-nk.me';
         const fetchImpl = opts.fetch || (globalThis as any).fetch;
         if (!fetchImpl) throw new Error('fetch is not available; provide opts.fetch in Node <18');
-        const http = new FetchHttpClient({ baseUrl: opts.baseUrl, apiKey: opts.apiKey, fetchImpl });
+        const http = new FetchHttpClient({ baseUrl, apiKey: opts.apiKey, fetchImpl });
         this.linkService = new LinkService(http);
     }
 

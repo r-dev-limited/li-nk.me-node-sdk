@@ -21,7 +21,7 @@ export interface Link {
 }
 
 export type NodeSDKOptions = {
-    baseUrl: string; // e.g., https://li-nk.me or http://localhost:8080
+    baseUrl?: string; // Defaults to https://li-nk.me. Only override for local development.
     apiKey?: string;
     fetch?: typeof fetch;
 };
