@@ -14,6 +14,7 @@ export interface Link {
     og_description?: string | null;
     og_image_url?: string | null;
     utm?: string | null;
+    utm_override?: string | null;
     enabled: 0 | 1;
     click_count: number;
     last_click_at?: string | null;
@@ -38,9 +39,27 @@ export type CreateLinkInput = {
         utm_source: string;
         utm_medium: string;
         utm_campaign: string;
+        utm_term: string;
+        utm_content: string;
+        utm_id: string;
+        utm_source_platform: string;
+        utm_creative_format: string;
+        utm_marketing_tactic: string;
         tags: string;
     }>;
     utmPresetId?: string;
+    utmOverrides?: Partial<{
+        utm_source: boolean;
+        utm_medium: boolean;
+        utm_campaign: boolean;
+        utm_term: boolean;
+        utm_content: boolean;
+        utm_id: boolean;
+        utm_source_platform: boolean;
+        utm_creative_format: boolean;
+        utm_marketing_tactic: boolean;
+        tags: boolean;
+    }>;
     allowParamPassthrough?: boolean;
     customData?: Record<string, string | number | boolean | null | undefined>;
     og?: {
@@ -49,4 +68,4 @@ export type CreateLinkInput = {
         imageUrl?: string;
     };
 };
-export type UpdateLinkInput = Partial<Pick<Link, 'deep_link_path' | 'ios_custom_url' | 'android_custom_url' | 'web_fallback_url' | 'allow_param_passthrough' | 'force_redirect_web' | 'og_title' | 'og_description' | 'og_image_url' | 'utm' | 'enabled'>>;
+export type UpdateLinkInput = Partial<Pick<Link, 'deep_link_path' | 'ios_custom_url' | 'android_custom_url' | 'web_fallback_url' | 'allow_param_passthrough' | 'force_redirect_web' | 'og_title' | 'og_description' | 'og_image_url' | 'utm' | 'utm_override' | 'enabled'>>;
