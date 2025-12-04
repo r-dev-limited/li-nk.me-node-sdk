@@ -1,7 +1,7 @@
 import { CreateLinkInput, Link, NodeSDKOptions, UpdateLinkInput } from './models.js';
 export declare class LinkMeClient {
     private readonly linkService;
-    constructor(opts: NodeSDKOptions);
+    constructor(opts?: NodeSDKOptions);
     createLink(input: CreateLinkInput): Promise<{
         id: string;
         app_id: string;

@@ -1,37 +1,24 @@
-import { describe, it } from 'node:test';
-import assert from 'node:assert/strict';
-import { FetchHttpClient } from './http.js';
-function createMockFetch(responses) {
-    let callIndex = 0;
-    const fn = async (_url, _init) => {
-        const current = responses[Math.min(callIndex, responses.length - 1)];
-        callIndex++;
-        return new Response(current.body !== undefined ? JSON.stringify(current.body) : undefined, { status: current.status, headers: { 'Content-Type': 'application/json' } });
-    };
-    return fn;
-}
+import { FetchHttpClient } from './http';
 describe('FetchHttpClient', () => {
     it('adds authorization header when apiKey provided', async () => {
-        const fetchImpl = async (url, init) => new Response(JSON.stringify({ ok: true }), { status: 200, headers: { 'Content-Type': 'application/json' } });
-        const client = new FetchHttpClient({ baseUrl: 'https://api', apiKey: 'key', fetchImpl: fetchImpl });
         let capturedHeaders;
-        const spyFetch = (async (url, init) => {
+        const spyFetch = (async (_url, init) => {
             capturedHeaders = init?.headers;
             return new Response(JSON.stringify({ ok: true }), { status: 200, headers: { 'Content-Type': 'application/json' } });
         });
-        const client2 = new FetchHttpClient({ baseUrl: 'https://api', apiKey: 'key', fetchImpl: spyFetch });
-        await client2.request('/ping');
-        assert.equal(capturedHeaders['Authorization'], 'Bearer key');
+        const client = new FetchHttpClient({ baseUrl: 'https://api', apiKey: 'key', fetchImpl: spyFetch });
+        await client.request('/ping');
+        expect(capturedHeaders['Authorization']).toBe('Bearer key');
     });
     it('throws error with status and detail on non-ok', async () => {
-        const fetchImpl = createMockFetch([{ status: 400, body: { error: 'bad' } }]);
+        const fetchImpl = (async () => new Response(JSON.stringify({ error: 'bad' }), { status: 400, headers: { 'Content-Type': 'application/json' } }));
         const client = new FetchHttpClient({ baseUrl: 'https://api', fetchImpl });
-        await assert.rejects(client.request('/oops'), (e) => e.status === 400 && e.detail?.error === 'bad');
+        await expect(client.request('/oops')).rejects.toMatchObject({ status: 400, detail: { error: 'bad' } });
     });
     it('delete treats 204 as success', async () => {
-        const fetchImpl = createMockFetch([{ status: 204 }]);
+        const fetchImpl = (async () => new Response(undefined, { status: 204 }));
         const client = new FetchHttpClient({ baseUrl: 'https://api', fetchImpl });
-        await assert.doesNotReject(client.delete('/x'));
+        await expect(client.delete('/x')).resolves.toBeUndefined();
     });
 });
 //# sourceMappingURL=http.test.js.map

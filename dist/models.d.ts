@@ -1,3 +1,4 @@
+type UTMField = 'utm_source' | 'utm_medium' | 'utm_campaign' | 'utm_term' | 'utm_content' | 'utm_id' | 'utm_source_platform' | 'utm_creative_format' | 'utm_marketing_tactic' | 'tags';
 export interface Link {
     id: string;
     app_id: string;
@@ -21,7 +22,7 @@ export interface Link {
     created_at?: string;
 }
 export type NodeSDKOptions = {
-    baseUrl: string;
+    baseUrl?: string;
     apiKey?: string;
     fetch?: typeof fetch;
 };
@@ -35,31 +36,9 @@ export type CreateLinkInput = {
         web?: string | null;
         forceWeb?: boolean;
     };
-    utm?: Partial<{
-        utm_source: string;
-        utm_medium: string;
-        utm_campaign: string;
-        utm_term: string;
-        utm_content: string;
-        utm_id: string;
-        utm_source_platform: string;
-        utm_creative_format: string;
-        utm_marketing_tactic: string;
-        tags: string;
-    }>;
+    utm?: Partial<Record<UTMField, string>>;
     utmPresetId?: string;
-    utmOverrides?: Partial<{
-        utm_source: boolean;
-        utm_medium: boolean;
-        utm_campaign: boolean;
-        utm_term: boolean;
-        utm_content: boolean;
-        utm_id: boolean;
-        utm_source_platform: boolean;
-        utm_creative_format: boolean;
-        utm_marketing_tactic: boolean;
-        tags: boolean;
-    }>;
+    utmOverrides?: Partial<Record<UTMField, boolean>>;
     allowParamPassthrough?: boolean;
     customData?: Record<string, string | number | boolean | null | undefined>;
     og?: {
@@ -69,3 +48,4 @@ export type CreateLinkInput = {
     };
 };
 export type UpdateLinkInput = Partial<Pick<Link, 'deep_link_path' | 'ios_custom_url' | 'android_custom_url' | 'web_fallback_url' | 'allow_param_passthrough' | 'force_redirect_web' | 'og_title' | 'og_description' | 'og_image_url' | 'utm' | 'utm_override' | 'enabled'>>;
+export {};
