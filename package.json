@@ -1,5 +1,5 @@
 {
-    "name": "@li-nk/node-sdk",
+    "name": "@li-nk.me/node-sdk",
     "version": "0.1.0",
     "type": "module",
     "description": "Official li-nk.me Node.js client for administering links via the Edge API.",
