@@ -1,6 +1,6 @@
 {
     "name": "@li-nk.me/node-sdk",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "type": "module",
     "description": "Official li-nk.me Node.js client for administering links via the Edge API.",
     "license": "Apache-2.0",
