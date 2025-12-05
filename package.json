@@ -4,6 +4,10 @@
     "type": "module",
     "description": "Official li-nk.me Node.js client for administering links via the Edge API.",
     "license": "Apache-2.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/r-dev-limited/li-nk.me-node-sdk"
+    },
     "main": "dist/index.js",
     "module": "dist/index.js",
     "types": "dist/index.d.ts",
