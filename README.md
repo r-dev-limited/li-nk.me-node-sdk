@@ -25,6 +25,17 @@ const client = new LinkMeClient({
 const created = await client.createLink({ appId: 'app_123', slug: 'welcome', deepLink: '/welcome' });
 ```
 
+## CommonJS Usage
+
+```js
+const LinkMeClient = require('@li-nk/node-sdk').default;
+
+const client = new LinkMeClient({
+  baseUrl: 'https://li-nk.me',
+  apiKey: 'YOUR_API_KEY',
+});
+```
+
 For full documentation, guides, and API reference, please visit our [Help Center](https://li-nk.me/docs/help).
 
 ## License

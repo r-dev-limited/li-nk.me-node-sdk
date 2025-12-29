@@ -1,6 +1,6 @@
 {
     "name": "@li-nk.me/node-sdk",
-    "version": "0.2.5",
+    "version": "0.2.6",
     "type": "module",
     "description": "Official li-nk.me Node.js client for administering links via the Edge API.",
     "license": "Apache-2.0",
@@ -14,18 +14,23 @@
     "exports": {
         ".": {
             "types": "./dist/index.d.ts",
-            "import": "./dist/index.js"
+            "import": "./dist/index.js",
+            "require": "./dist-cjs/index.js",
+            "default": "./dist/index.js"
         },
         "./package.json": "./package.json"
     },
     "files": [
         "dist",
+        "dist-cjs",
         "README.md",
         "LICENSE"
     ],
     "scripts": {
-        "build": "tsc -p tsconfig.json",
-        "clean": "rimraf dist",
+        "build": "npm run build:esm && npm run build:cjs",
+        "build:esm": "tsc -p tsconfig.json",
+        "build:cjs": "tsc -p tsconfig.cjs.json && node scripts/write-cjs-package.cjs",
+        "clean": "rimraf dist dist-cjs",
         "watch": "tsc -p tsconfig.json --watch --preserveWatchOutput",
         "test": "jest",
         "test:watch": "jest --watch",
