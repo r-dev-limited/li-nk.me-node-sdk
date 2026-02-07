@@ -52,7 +52,7 @@ export const ExtendedLinkSchema = LinkSchema.extend({
  * Client input for creating a Link via the Node SDK.
  */
 export const CreateLinkInputSchema = z.object({
-    appId: z.string(),
+    appId: z.string().min(1, 'appId is required'),
     slug: z.string().optional(),
     deepLink: z.string().nullable().optional(),
     redirects: z.object({

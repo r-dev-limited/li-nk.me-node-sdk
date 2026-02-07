@@ -37,6 +37,9 @@ export class LinkService {
     }
 
     async listLinks(appId: string): Promise<Array<Link & { hostname?: string | null; idUrl?: string; slugUrl?: string; clicks?: number; installs?: number }>> {
+        if (appId == null || String(appId).trim() === '') {
+            throw new Error('appId is required');
+        }
         const res = await this.http.request<any>(`/api/apps/${encodeURIComponent(appId)}/links`);
         return ExtendedLinkSchema.array().parse(res);
     }

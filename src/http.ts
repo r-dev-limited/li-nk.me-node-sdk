@@ -23,7 +23,7 @@ export class FetchHttpClient implements HttpClient {
     }
 
     async request<T>(path: string, init?: HttpRequestInit): Promise<T> {
-        const url = `${this.baseUrl}${path}`;
+        const url = `${this.baseUrl}${path.replace(/\/+/g, '/')}`;
         const headers: Record<string, string> = { 'Content-Type': 'application/json' };
         if (this.apiKey) headers['Authorization'] = `Bearer ${this.apiKey}`;
         const res = await this.fetchImpl(url, { ...init, headers: { ...headers, ...(init?.headers as any) } });
