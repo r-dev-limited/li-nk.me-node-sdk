@@ -12,7 +12,6 @@ export class LinkService {
     async createLink(input: CreateLinkInput): Promise<{ id: string; app_id: string; domain_id: string | null; slug: string; slugUrl: string }> {
         const validated = CreateLinkInputSchema.parse(input);
         const body: any = {
-            id: validated.slug,
             slug: validated.slug,
             deepLink: validated.deepLink ?? undefined,
             redirects: validated.redirects,
