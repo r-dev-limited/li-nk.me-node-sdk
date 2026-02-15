@@ -36,6 +36,30 @@ const client = new LinkMeClient({
 });
 ```
 
+## Webhook Helpers
+
+The SDK also exports helpers for common webhook receiver logic:
+
+- verify `X-LinkMe-Signature`
+- parse the LinkMe webhook envelope
+
+```ts
+import {
+  parseLinkMeWebhookEnvelope,
+  verifyLinkMeWebhookSignature,
+} from '@li-nk.me/node-sdk';
+
+const rawBody = req.rawBody.toString('utf8');
+const signature = req.get('X-LinkMe-Signature');
+
+if (!verifyLinkMeWebhookSignature(rawBody, signature, process.env.LINKME_WEBHOOK_SIGNING_SECRET!)) {
+  res.status(401).send('Invalid signature');
+  return;
+}
+
+const envelope = parseLinkMeWebhookEnvelope(JSON.parse(rawBody));
+```
+
 For full documentation, guides, and API reference, please visit our [Help Center](https://li-nk.me/docs/help).
 
 ## License

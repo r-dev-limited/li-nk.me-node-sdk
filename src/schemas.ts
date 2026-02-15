@@ -120,8 +120,20 @@ export const CreateLinkResponseSchema = z.object({
     slugUrl: z.string(),
 });
 
+/**
+ * Standard webhook envelope sent by LinkMe.
+ */
+export const LinkMeWebhookEnvelopeSchema = z.object({
+    id: z.string().min(1),
+    event: z.string().min(1),
+    ts: z.string().optional(),
+    app_id: z.string().optional(),
+    data: z.record(z.unknown()).optional(),
+});
+
 export type LinkParsed = z.infer<typeof LinkSchema>;
 export type ExtendedLinkParsed = z.infer<typeof ExtendedLinkSchema>;
 export type CreateLinkInputParsed = z.infer<typeof CreateLinkInputSchema>;
 export type UpdateLinkInputParsed = z.infer<typeof UpdateLinkInputSchema>;
 export type CreateLinkResponseParsed = z.infer<typeof CreateLinkResponseSchema>;
+export type LinkMeWebhookEnvelopeParsed = z.infer<typeof LinkMeWebhookEnvelopeSchema>;
