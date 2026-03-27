@@ -1,21 +1,21 @@
 # LinkMe Node SDK
 
-Official Node.js client for LinkMe — links admin and resolution API.
+Official Node.js client for LinkMe — link management and webhook helpers.
 
 - **Main Site**: [li-nk.me](https://li-nk.me)
 - **Documentation**: [Node Setup](https://li-nk.me/docs/developer/setup/node)
-- **Package**: [npm](https://www.npmjs.com/package/@li-nk/node-sdk)
+- **Package**: [npm](https://www.npmjs.com/package/@li-nk.me/node-sdk)
 
 ## Installation
 
 ```bash
-npm install @li-nk/node-sdk
+npm install @li-nk.me/node-sdk
 ```
 
 ## Basic Usage
 
 ```ts
-import LinkMeClient from '@li-nk/node-sdk';
+import LinkMeClient from '@li-nk.me/node-sdk';
 
 const client = new LinkMeClient({
   baseUrl: 'https://li-nk.me',
@@ -28,13 +28,23 @@ const created = await client.createLink({ appId: 'app_123', slug: 'welcome', dee
 ## CommonJS Usage
 
 ```js
-const LinkMeClient = require('@li-nk/node-sdk').default;
+const LinkMeClient = require('@li-nk.me/node-sdk').default;
 
 const client = new LinkMeClient({
   baseUrl: 'https://li-nk.me',
   apiKey: 'YOUR_API_KEY',
 });
 ```
+
+## Methods
+
+| Method | Description |
+| --- | --- |
+| `createLink(input)` | Create a short link. Returns `{ id, app_id, domain_id, slug, slugUrl }`. |
+| `getLink(id)` | Fetch a link by slug or ID. |
+| `listLinks(appId)` | List all links for an app with computed extras. |
+| `updateLink(id, updates)` | Partial update using snake_case fields and `0 \| 1` flags. |
+| `deleteLink(id)` | Permanently delete a link. |
 
 ## Webhook Helpers
 
@@ -59,6 +69,10 @@ if (!verifyLinkMeWebhookSignature(rawBody, signature, process.env.LINKME_WEBHOOK
 
 const envelope = parseLinkMeWebhookEnvelope(JSON.parse(rawBody));
 ```
+
+## Zod Schemas
+
+The SDK exports Zod schemas and inferred types for runtime validation: `LinkSchema`, `ExtendedLinkSchema`, `CreateLinkInputSchema`, `UpdateLinkInputSchema`, `CreateLinkResponseSchema`, `LinkMeWebhookEnvelopeSchema`.
 
 For full documentation, guides, and API reference, please visit our [Help Center](https://li-nk.me/docs/help).
 
