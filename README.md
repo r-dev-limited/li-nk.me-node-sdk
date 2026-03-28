@@ -18,7 +18,6 @@ npm install @li-nk.me/node-sdk
 import LinkMeClient from '@li-nk.me/node-sdk';
 
 const client = new LinkMeClient({
-  baseUrl: 'https://li-nk.me',
   apiKey: 'YOUR_API_KEY',
 });
 
@@ -31,7 +30,6 @@ const created = await client.createLink({ appId: 'app_123', slug: 'welcome', dee
 const LinkMeClient = require('@li-nk.me/node-sdk').default;
 
 const client = new LinkMeClient({
-  baseUrl: 'https://li-nk.me',
   apiKey: 'YOUR_API_KEY',
 });
 ```
