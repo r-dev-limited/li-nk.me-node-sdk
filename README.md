@@ -24,6 +24,11 @@ const client = new LinkMeClient({
 const created = await client.createLink({ appId: 'app_123', slug: 'welcome', deepLink: '/welcome' });
 ```
 
+`createLink` supports `displayInPortal`:
+- `false` hides the link from the Portal links list (still works as a universal link).
+- `true` shows it in the Portal.
+- In this SDK, if omitted, it defaults to `false`.
+
 ## CommonJS Usage
 
 ```js

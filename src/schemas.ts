@@ -87,6 +87,7 @@ export const CreateLinkInputSchema = z.object({
         tags: z.boolean().optional(),
     }).partial().optional(),
     allowParamPassthrough: z.boolean().optional(),
+    displayInPortal: z.boolean().optional(),
     customData: z.record(z.union([z.string(), z.number(), z.boolean(), z.null(), z.undefined()])).optional(),
     og: z.object({ title: z.string().optional(), description: z.string().optional(), imageUrl: z.string().optional() }).optional(),
 });

@@ -27,6 +27,7 @@ export interface Link {
     og_image_url?: string | null;
     utm?: string | null;
     utm_override?: string | null;
+    internal?: 0 | 1;
     enabled: 0 | 1;
     click_count: number;
     last_click_at?: string | null;
@@ -53,6 +54,7 @@ export type CreateLinkInput = {
     utmPresetId?: string;
     utmOverrides?: Partial<Record<UTMField, boolean>>;
     allowParamPassthrough?: boolean;
+    displayInPortal?: boolean;
     customData?: Record<string, string | number | boolean | null | undefined>;
     og?: { title?: string; description?: string; imageUrl?: string };
 };

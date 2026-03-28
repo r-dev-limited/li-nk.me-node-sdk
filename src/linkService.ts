@@ -18,6 +18,8 @@ export class LinkService {
             utm: validated.utm,
             utmPresetId: validated.utmPresetId,
             allowParamPassthrough: validated.allowParamPassthrough,
+            // New SDK default: hidden from portal unless explicitly opted in.
+            displayInPortal: validated.displayInPortal ?? false,
             customData: validated.customData,
             og_title: validated.og?.title,
             og_description: validated.og?.description,
