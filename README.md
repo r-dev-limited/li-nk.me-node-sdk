@@ -1,60 +1,72 @@
 # LinkMe Node SDK
 
-Official Node.js client for LinkMe — link management and webhook helpers.
+Server-side client for LinkMe — programmatic link management, webhook verification, and backend automation.
 
-- **Main Site**: [li-nk.me](https://li-nk.me)
-- **Documentation**: [Node Setup](https://li-nk.me/docs/developer/setup/node)
-- **Package**: [npm](https://www.npmjs.com/package/@li-nk.me/node-sdk)
+[![npm](https://img.shields.io/npm/v/@li-nk.me/node-sdk)](https://www.npmjs.com/package/@li-nk.me/node-sdk)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
 
-## Installation
+- [Main Site](https://li-nk.me)
+- [Setup Guide](https://help.li-nk.me/hc/link-me/en/developer-setup/developer-setup)
+- [SDK Reference](https://help.li-nk.me/hc/link-me/en/sdks/node-sdk-reference)
+- [Help Center](https://help.li-nk.me/hc/link-me/en)
+
+## Quick start
+
+### 1. Prerequisites
+
+- A LinkMe workspace with at least one app
+- A server/API key from the portal (write scope for link management)
+- Node.js 18+
+
+### 2. Install
 
 ```bash
 npm install @li-nk.me/node-sdk
 ```
 
-## Basic Usage
+### 3. Create and manage links
 
 ```ts
 import LinkMeClient from '@li-nk.me/node-sdk';
 
-const client = new LinkMeClient({
-  apiKey: 'YOUR_API_KEY',
+const linkme = new LinkMeClient({
+  apiKey: process.env.LINKME_SERVER_KEY,
 });
 
-const created = await client.createLink({ appId: 'app_123', slug: 'welcome', deepLink: '/welcome' });
+// Create a short link
+const link = await linkme.createLink({
+  appId: 'app_123',
+  slug: 'spring',
+  deepLink: '/promo/spring',
+  redirects: {
+    iosStoreUrl: 'https://apps.apple.com/...',
+    androidStoreUrl: 'https://play.google.com/...',
+    webFallbackUrl: 'https://example.com/spring',
+    forceRedirectWeb: false,
+  },
+});
+
+// List all links for an app
+const links = await linkme.listLinks('app_123');
+
+// Update a link
+await linkme.updateLink('spring', {
+  metadata: { campaign: 'spring-2026' },
+});
+
+// Delete a link
+await linkme.deleteLink('spring');
 ```
 
-`createLink` supports `displayInPortal`:
-- `false` hides the link from the Portal links list (still works as a universal link).
-- `true` shows it in the Portal.
-- In this SDK, if omitted, it defaults to `false`.
-
-## CommonJS Usage
+### CommonJS usage
 
 ```js
 const LinkMeClient = require('@li-nk.me/node-sdk').default;
-
-const client = new LinkMeClient({
-  apiKey: 'YOUR_API_KEY',
-});
 ```
 
-## Methods
+## Webhook verification
 
-| Method | Description |
-| --- | --- |
-| `createLink(input)` | Create a short link. Returns `{ id, app_id, domain_id, slug, slugUrl }`. |
-| `getLink(id)` | Fetch a link by slug or ID. |
-| `listLinks(appId)` | List all links for an app with computed extras. |
-| `updateLink(id, updates)` | Partial update using snake_case fields and `0 \| 1` flags. |
-| `deleteLink(id)` | Permanently delete a link. |
-
-## Webhook Helpers
-
-The SDK also exports helpers for common webhook receiver logic:
-
-- verify `X-LinkMe-Signature`
-- parse the LinkMe webhook envelope
+The SDK exports helpers for verifying and parsing webhook payloads:
 
 ```ts
 import {
@@ -71,13 +83,35 @@ if (!verifyLinkMeWebhookSignature(rawBody, signature, process.env.LINKME_WEBHOOK
 }
 
 const envelope = parseLinkMeWebhookEnvelope(JSON.parse(rawBody));
+// envelope.event — e.g. 'link.click', 'link.claim', 'link.app_open'
 ```
 
-## Zod Schemas
+Supported webhook events: `link.click`, `link.token_created`, `link.claim`, `link.app_open`, `link.deferred_claim_attempt`. Configure webhooks in **Developer Settings > Webhooks** in the portal.
 
-The SDK exports Zod schemas and inferred types for runtime validation: `LinkSchema`, `ExtendedLinkSchema`, `CreateLinkInputSchema`, `UpdateLinkInputSchema`, `CreateLinkResponseSchema`, `LinkMeWebhookEnvelopeSchema`.
+## API reference
 
-For full documentation, guides, and API reference, please visit our [Help Center](https://li-nk.me/docs/help).
+| Method | Description |
+| --- | --- |
+| `createLink(input)` | Create a short link. Returns `{ id, app_id, domain_id, slug, slugUrl }` |
+| `getLink(id)` | Fetch a link by slug or ID |
+| `listLinks(appId)` | List all links for an app |
+| `updateLink(id, updates)` | Partial update (snake_case fields, `0 \| 1` flags) |
+| `deleteLink(id)` | Permanently delete a link |
+
+### `createLink` options
+
+`displayInPortal` controls portal visibility:
+- `false` (default in this SDK) — hides the link from the Portal links list (still works as a universal link)
+- `true` — shows it in the Portal
+
+## Zod schemas
+
+The SDK exports Zod schemas and inferred types for runtime validation:
+
+- `LinkSchema` / `ExtendedLinkSchema`
+- `CreateLinkInputSchema` / `CreateLinkResponseSchema`
+- `UpdateLinkInputSchema`
+- `LinkMeWebhookEnvelopeSchema`
 
 ## License
 
