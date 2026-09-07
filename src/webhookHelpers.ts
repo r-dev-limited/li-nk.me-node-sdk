@@ -1,5 +1,5 @@
 import crypto from 'node:crypto';
-import { LinkMeWebhookEnvelopeSchema, type LinkMeWebhookEnvelopeParsed } from './schemas';
+import { LinkMeWebhookEnvelopeSchema, type LinkMeWebhookEnvelopeParsed } from './schemas.js';
 
 export type LinkMeWebhookEnvelope = LinkMeWebhookEnvelopeParsed;
 

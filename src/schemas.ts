@@ -88,7 +88,7 @@ export const CreateLinkInputSchema = z.object({
     }).partial().optional(),
     allowParamPassthrough: z.boolean().optional(),
     displayInPortal: z.boolean().optional(),
-    customData: z.record(z.union([z.string(), z.number(), z.boolean(), z.null(), z.undefined()])).optional(),
+    customData: z.record(z.string(), z.union([z.string(), z.number(), z.boolean(), z.null(), z.undefined()])).optional(),
     og: z.object({ title: z.string().optional(), description: z.string().optional(), imageUrl: z.string().optional() }).optional(),
 });
 
@@ -129,7 +129,7 @@ export const LinkMeWebhookEnvelopeSchema = z.object({
     event: z.string().min(1),
     ts: z.string().optional(),
     app_id: z.string().optional(),
-    data: z.record(z.unknown()).optional(),
+    data: z.record(z.string(), z.unknown()).optional(),
 });
 
 export type LinkParsed = z.infer<typeof LinkSchema>;

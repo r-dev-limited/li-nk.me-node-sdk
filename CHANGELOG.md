@@ -2,6 +2,12 @@
 
 All notable changes to the LinkMe Node SDK.
 
+## 0.2.14
+
+- Fixes Node ESM runtime imports and forwards `utmOverrides` in create-link requests.
+- Excludes compiled tests from package archives and adds ESM/CJS consumer coverage.
+- Validates the SDK with Zod 4.5.4, TypeScript 6, Jest 30, ts-jest 29.4.12, and rimraf 6.
+
 ## 0.2.13
 
 - General improvements and alignment with platform release.
