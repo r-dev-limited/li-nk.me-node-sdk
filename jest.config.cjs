@@ -1,14 +1,26 @@
+const fs = require('node:fs');
+const path = require('node:path');
+const { defaultsESM } = require('ts-jest/presets');
+
+const workspaceRoot = path.resolve(__dirname, '../../');
+const isWorkspaceInstall = fs.existsSync(path.join(workspaceRoot, 'package.json'));
+const rootDir = isWorkspaceInstall ? workspaceRoot : __dirname;
+const rootRelative = (relativePath) => path.relative(rootDir, path.join(__dirname, relativePath));
+
 module.exports = {
-    preset: 'ts-jest/presets/default-esm',
+    ...defaultsESM,
+    rootDir,
+    transform: {
+        '^.+\\.m?tsx?$': ['ts-jest', { useESM: true, tsconfig: path.join(__dirname, 'tsconfig.json') }]
+    },
     testEnvironment: 'node',
-    roots: ['<rootDir>/src'],
+    roots: [path.join(__dirname, 'src')],
     testMatch: ['**/*.test.ts'],
     moduleFileExtensions: ['ts', 'js', 'json'],
-    extensionsToTreatAsEsm: ['.ts'],
     moduleNameMapper: {
         '^(\\.{1,2}/.*)\\.js$': '$1'
     },
-    collectCoverageFrom: ['src/**/*.ts', '!src/**/*.test.ts'],
+    collectCoverageFrom: [rootRelative('src/**/*.ts'), `!${rootRelative('src/**/*.test.ts')}`],
     coverageThreshold: {
         global: {
             lines: 80,
@@ -17,10 +29,4 @@ module.exports = {
             branches: 75
         }
     },
-    transform: {
-        '^.+\\.tsx?$': [
-            'ts-jest',
-            { useESM: true }
-        ]
-    }
 };
