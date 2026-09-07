@@ -23,4 +23,10 @@ describe('FetchHttpClient', () => {
         const client = new FetchHttpClient({ baseUrl: 'https://api', fetchImpl });
         await expect(client.delete('/x')).resolves.toBeUndefined();
     });
+
+    it('delete reports non-success status and malformed error bodies', async () => {
+        const fetchImpl = (async () => new Response('not-json', { status: 500 })) as any as typeof fetch;
+        const client = new FetchHttpClient({ baseUrl: 'https://api', fetchImpl });
+        await expect(client.delete('/x')).rejects.toMatchObject({ status: 500 });
+    });
 });

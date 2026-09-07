@@ -1,6 +1,6 @@
 import { HttpClient } from './http.js';
 import { CreateLinkInput, Link, UpdateLinkInput } from './models.js';
-import { CreateLinkInputSchema, CreateLinkResponseSchema, ExtendedLinkSchema, LinkSchema, UpdateLinkInputSchema } from './schemas';
+import { CreateLinkInputSchema, CreateLinkResponseSchema, ExtendedLinkSchema, LinkSchema, UpdateLinkInputSchema } from './schemas.js';
 
 export class LinkService {
     private readonly http: HttpClient;
@@ -17,6 +17,7 @@ export class LinkService {
             redirects: validated.redirects,
             utm: validated.utm,
             utmPresetId: validated.utmPresetId,
+            utmOverrides: validated.utmOverrides,
             allowParamPassthrough: validated.allowParamPassthrough,
             // New SDK default: hidden from portal unless explicitly opted in.
             displayInPortal: validated.displayInPortal ?? false,
