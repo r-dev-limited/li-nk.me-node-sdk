@@ -16,7 +16,7 @@ Server-side client for LinkMe — programmatic link management, webhook verifica
 
 - A LinkMe workspace with at least one app
 - A server/API key from the portal (write scope for link management)
-- Node.js 18+
+- Node.js 22 or 24 recommended (package minimum: Node.js 18)
 
 ### 2. Install
 
@@ -39,10 +39,10 @@ const link = await linkme.createLink({
   slug: 'spring',
   deepLink: '/promo/spring',
   redirects: {
-    iosStoreUrl: 'https://apps.apple.com/...',
-    androidStoreUrl: 'https://play.google.com/...',
-    webFallbackUrl: 'https://example.com/spring',
-    forceRedirectWeb: false,
+    ios: 'https://apps.apple.com/...',
+    android: 'https://play.google.com/...',
+    web: 'https://example.com/spring',
+    forceWeb: false,
   },
 });
 
@@ -51,7 +51,7 @@ const links = await linkme.listLinks('app_123');
 
 // Update a link
 await linkme.updateLink('spring', {
-  metadata: { campaign: 'spring-2026' },
+  web_fallback_url: 'https://example.com/spring-2026',
 });
 
 // Delete a link
