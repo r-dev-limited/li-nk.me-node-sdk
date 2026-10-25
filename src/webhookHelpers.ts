@@ -17,6 +17,10 @@ export function verifyLinkMeWebhookSignature(
     }
 
     const receivedHex = signatureHeader.slice('sha256='.length);
+    // Buffer's hex decoder silently truncates at invalid or incomplete bytes.
+    if (!/^[a-fA-F0-9]{64}$/.test(receivedHex)) {
+        return false;
+    }
     const expectedHex = crypto
         .createHmac('sha256', secret)
         .update(rawBody)

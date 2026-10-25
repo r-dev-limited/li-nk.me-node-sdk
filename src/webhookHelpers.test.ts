@@ -28,4 +28,14 @@ describe('webhookHelpers', () => {
         expect(verifyLinkMeWebhookSignature(rawBody, `sha256=${digest}`, secret)).toBe(true);
         expect(verifyLinkMeWebhookSignature(rawBody, 'sha256=bad', secret)).toBe(false);
     });
+
+    it('rejects malformed digests instead of accepting their valid hex prefix', () => {
+        const body = Buffer.from(JSON.stringify(sampleEnvelope));
+        const secret = 'test-secret';
+        const digest = crypto.createHmac('sha256', secret).update(body).digest('hex');
+        expect(verifyLinkMeWebhookSignature(body, `sha256=${digest.toUpperCase()}`, secret)).toBe(true);
+        for (const malformed of [digest + 'garbage', digest + '0', digest + '00', digest + '\n', digest.slice(0, -1)]) {
+            expect(verifyLinkMeWebhookSignature(body, `sha256=${malformed}`, secret)).toBe(false);
+        }
+    });
 });
