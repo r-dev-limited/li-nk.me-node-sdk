@@ -2,6 +2,11 @@
 
 All notable changes to the LinkMe Node SDK.
 
+## Unreleased
+
+- Reject malformed webhook signature digests, including valid digests followed by extra or non-hex characters.
+- Declare Node.js 24 type definitions explicitly for independent installs; retain TypeScript 6 for ts-jest compatibility.
+
 ## 0.2.14
 
 - Fixes Node ESM runtime imports and forwards `utmOverrides` in create-link requests.

@@ -113,6 +113,10 @@ The SDK exports Zod schemas and inferred types for runtime validation:
 - `UpdateLinkInputSchema`
 - `LinkMeWebhookEnvelopeSchema`
 
+## Development
+
+For SDK development, run `nvm install && nvm use` to select the patched Node 24.22.1 LTS runtime. CI tests Node 22.23.4 and 24.22.1 and audits the independent lockfile.
+
 ## License
 
 Apache-2.0
