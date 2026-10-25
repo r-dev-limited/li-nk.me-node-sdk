@@ -4,6 +4,12 @@ All notable changes to the LinkMe Node SDK.
 
 ## Unreleased
 
+- Add a configurable 15-second HTTP deadline covering response bodies, reusable `cancelPendingRequests()`, and constructor `signal` support. Expose `TimeoutError`/`AbortError` names without implicit retries.
+
+- Document trusted management-read credentials separately from publishable SDK reading/ingestion in the new Edge policy.
+
+- Add typed surface/domain selection, expiry, one-time use, and desktop mode to link creation; preserve scoped and lifecycle response metadata.
+- Reject unsupported creation options before making a request instead of silently dropping them.
 - Reject malformed webhook signature digests, including valid digests followed by extra or non-hex characters.
 - Declare Node.js 24 type definitions explicitly for independent installs; retain TypeScript 6 for ts-jest compatibility.
 

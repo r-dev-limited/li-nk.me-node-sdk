@@ -58,6 +58,24 @@ await linkme.updateLink('spring', {
 await linkme.deleteLink('spring');
 ```
 
+### Surface and lifecycle options in the next release
+
+For an app with multiple surface bindings, choose a surface explicitly. The domain must belong to the app's environment. The expiry uses an ISO 8601 timestamp, and a one-time link can be consumed by one eligible navigation.
+
+```ts
+const link = await linkme.createLink({
+  appId: 'app_123',
+  surfaceId: 'surface_customer',
+  domainId: 'domain_production',
+  expiresAt: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
+  oneTimeUse: true,
+  deepLink: '/invite/accept',
+  redirects: { web: 'https://example.com/invite', desktopMode: 'web' },
+});
+```
+
+Creation results retain `environment_id`, `surface_id`, `expires_at`, and `one_time_use` when returned by Edge. Reads preserve the link's surface, expiry, consumption, and desktop-mode metadata. Unknown creation options are rejected so a misspelled policy field cannot silently disappear. These additions are unreleased; published 0.2.14 does not include them.
+
 ### CommonJS usage
 
 ```js
@@ -120,3 +138,27 @@ For SDK development, run `nvm install && nvm use` to select the patched Node 24.
 ## License
 
 Apache-2.0
+
+## Trusted management credentials (unreleased Edge)
+
+Node management reads require a trusted key with `can_manage_read: true` or
+`can_write: true`. Management writes require `can_write`. Keep these keys on
+secure servers. Publishable client `can_read` and `can_ingest` credentials only
+serve SDK resolution/telemetry; they cannot list private management data or
+visitor diagnostics. Existing server read-only integrations need an owner to
+create/rotate an explicit management-read key before deploying the new policy.
+
+## Request deadlines and cancellation (unreleased)
+
+`new LinkMeClient({ requestTimeoutMs: 15000 })` bounds the complete fetch/body
+operation, including success/error bodies. The default is 15 seconds. Overrides
+must be positive integers up to 2147483647 milliseconds. The client rejects with
+an error named `TimeoutError` at the deadline.
+
+Call `client.cancelPendingRequests()` to abort current work; later requests can
+still run. Pass `signal: controller.signal` in the constructor to bind the client
+to a host `AbortController`; requests reject with `AbortError` after cancellation,
+including requests made with an already-aborted host signal. An injected fetch
+that ignores abort cannot leave the public call waiting indefinitely. These
+operations add no automatic retry and cannot retract a mutation already accepted
+by the server.

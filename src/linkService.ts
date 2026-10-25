@@ -1,5 +1,5 @@
 import { HttpClient } from './http.js';
-import { CreateLinkInput, Link, UpdateLinkInput } from './models.js';
+import { CreatedLink, CreateLinkInput, Link, ListedLink, UpdateLinkInput } from './models.js';
 import { CreateLinkInputSchema, CreateLinkResponseSchema, ExtendedLinkSchema, LinkSchema, UpdateLinkInputSchema } from './schemas.js';
 
 export class LinkService {
@@ -9,9 +9,13 @@ export class LinkService {
         this.http = http;
     }
 
-    async createLink(input: CreateLinkInput): Promise<{ id: string; app_id: string; domain_id: string | null; slug: string; slugUrl: string }> {
+    async createLink(input: CreateLinkInput): Promise<CreatedLink> {
         const validated = CreateLinkInputSchema.parse(input);
         const body: any = {
+            surface_id: validated.surfaceId,
+            domain_id: validated.domainId,
+            expires_at: validated.expiresAt,
+            one_time_use: validated.oneTimeUse,
             slug: validated.slug,
             deepLink: validated.deepLink ?? undefined,
             redirects: validated.redirects,
@@ -38,7 +42,7 @@ export class LinkService {
         return LinkSchema.parse(res);
     }
 
-    async listLinks(appId: string): Promise<Array<Link & { hostname?: string | null; idUrl?: string; slugUrl?: string; clicks?: number; installs?: number }>> {
+    async listLinks(appId: string): Promise<ListedLink[]> {
         if (appId == null || String(appId).trim() === '') {
             throw new Error('appId is required');
         }

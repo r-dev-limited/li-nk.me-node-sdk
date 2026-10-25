@@ -1,19 +1,25 @@
 import { FetchHttpClient } from './http.js';
 import { LinkService } from './linkService.js';
-import { CreateLinkInput, Link, NodeSDKOptions, UpdateLinkInput } from './models.js';
+import { CreatedLink, CreateLinkInput, Link, ListedLink, NodeSDKOptions, UpdateLinkInput } from './models.js';
 
 export class LinkMeClient {
     private readonly linkService: LinkService;
+    private readonly http: FetchHttpClient;
 
     constructor(opts: NodeSDKOptions = {}) {
         const baseUrl = opts?.baseUrl || 'https://li-nk.me';
         const fetchImpl = opts.fetch || (globalThis as any).fetch;
         if (!fetchImpl) throw new Error('fetch is not available; provide opts.fetch in Node <18');
-        const http = new FetchHttpClient({ baseUrl, apiKey: opts.apiKey, fetchImpl });
+        const http = new FetchHttpClient({ baseUrl, apiKey: opts.apiKey, fetchImpl, requestTimeoutMs: opts.requestTimeoutMs, signal: opts.signal });
+        this.http = http;
         this.linkService = new LinkService(http);
     }
 
-    async createLink(input: CreateLinkInput): Promise<{ id: string; app_id: string; domain_id: string | null; slug: string; slugUrl: string }> {
+    cancelPendingRequests(): void {
+        this.http.cancelPendingRequests();
+    }
+
+    async createLink(input: CreateLinkInput): Promise<CreatedLink> {
         return await this.linkService.createLink(input);
     }
 
@@ -21,7 +27,7 @@ export class LinkMeClient {
         return await this.linkService.getLink(id);
     }
 
-    async listLinks(appId: string): Promise<Array<Link & { hostname?: string | null; idUrl?: string; slugUrl?: string; clicks?: number; installs?: number }>> {
+    async listLinks(appId: string): Promise<ListedLink[]> {
         return await this.linkService.listLinks(appId);
     }
 
@@ -35,4 +41,4 @@ export class LinkMeClient {
 }
 
 export default LinkMeClient;
-export * from './models.js'; 
+export * from './models.js';

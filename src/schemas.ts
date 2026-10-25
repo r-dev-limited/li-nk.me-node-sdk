@@ -18,6 +18,15 @@ export const LinkSchema = z.object({
     id: z.string(),
     app_id: z.string(),
     domain_id: z.string().nullable().optional(),
+    environment_id: z.string().nullable().optional(),
+    surface_id: z.string().nullable().optional(),
+    path_prefix: z.string().nullable().optional(),
+    fallback_origin: z.string().nullable().optional(),
+    expires_at: z.string().nullable().optional(),
+    one_time_use: z.union([z.literal(0), z.literal(1)]).optional(),
+    consumed_at: z.string().nullable().optional(),
+    desktop_redirect_type: z.enum(['web', 'hosted']).nullable().optional(),
+    custom_kv: z.string().nullable().optional(),
     slug: z.string(),
     deep_link_path: z.string().nullable().optional(),
     deep_link_params: z.string().nullable().optional(),
@@ -46,6 +55,9 @@ export const ExtendedLinkSchema = LinkSchema.extend({
     slugUrl: z.string().optional(),
     clicks: z.number().optional(),
     installs: z.number().optional(),
+    referral_claims: z.number().optional(),
+    inferred_claims: z.number().optional(),
+    deterministic_claims: z.number().optional(),
 });
 
 /**
@@ -53,6 +65,10 @@ export const ExtendedLinkSchema = LinkSchema.extend({
  */
 export const CreateLinkInputSchema = z.object({
     appId: z.string().min(1, 'appId is required'),
+    surfaceId: z.string().min(1).optional(),
+    domainId: z.string().min(1).optional(),
+    expiresAt: z.string().datetime({ offset: true }).optional(),
+    oneTimeUse: z.boolean().optional(),
     slug: z.string().optional(),
     deepLink: z.string().nullable().optional(),
     redirects: z.object({
@@ -60,7 +76,8 @@ export const CreateLinkInputSchema = z.object({
         android: z.string().nullable().optional(),
         web: z.string().nullable().optional(),
         forceWeb: z.boolean().optional(),
-    }).optional(),
+        desktopMode: z.enum(['web', 'hosted']).optional(),
+    }).strict().optional(),
     utm: z.object({
         utm_source: z.string().optional(),
         utm_medium: z.string().optional(),
@@ -90,7 +107,7 @@ export const CreateLinkInputSchema = z.object({
     displayInPortal: z.boolean().optional(),
     customData: z.record(z.string(), z.union([z.string(), z.number(), z.boolean(), z.null(), z.undefined()])).optional(),
     og: z.object({ title: z.string().optional(), description: z.string().optional(), imageUrl: z.string().optional() }).optional(),
-});
+}).strict();
 
 /**
  * Partial update payload accepted by the Edge API for Link updates.
@@ -117,6 +134,10 @@ export const CreateLinkResponseSchema = z.object({
     id: z.string(),
     app_id: z.string(),
     domain_id: z.string().nullable(),
+    environment_id: z.string().nullable().optional(),
+    surface_id: z.string().nullable().optional(),
+    expires_at: z.string().nullable().optional(),
+    one_time_use: z.union([z.literal(0), z.literal(1)]).optional(),
     slug: z.string(),
     slugUrl: z.string(),
 });
