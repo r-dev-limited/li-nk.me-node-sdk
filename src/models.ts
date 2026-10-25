@@ -14,6 +14,15 @@ export interface Link {
     id: string;
     app_id: string;
     domain_id?: string | null;
+    environment_id?: string | null;
+    surface_id?: string | null;
+    path_prefix?: string | null;
+    fallback_origin?: string | null;
+    expires_at?: string | null;
+    one_time_use?: 0 | 1;
+    consumed_at?: string | null;
+    desktop_redirect_type?: 'web' | 'hosted' | null;
+    custom_kv?: string | null;
     slug: string;
     deep_link_path?: string | null;
     deep_link_params?: string | null;
@@ -35,13 +44,33 @@ export interface Link {
 }
 
 export type NodeSDKOptions = {
+    /** Deadline for the complete fetch/body operation. Defaults to 15000 ms. */
+    requestTimeoutMs?: number;
+    /** Optional host cancellation signal applied to this client. */
+    signal?: AbortSignal;
     baseUrl?: string; // Defaults to https://li-nk.me. Only override for local development.
     apiKey?: string;
     fetch?: typeof fetch;
 };
 
+export type ListedLink = Link & {
+    hostname?: string | null;
+    idUrl?: string;
+    slugUrl?: string;
+    clicks?: number;
+    /** @deprecated Legacy inferred-install aggregate; use the explicit claim metrics. */
+    installs?: number;
+    referral_claims?: number;
+    inferred_claims?: number;
+    deterministic_claims?: number;
+};
+
 export type CreateLinkInput = {
     appId: string;
+    surfaceId?: string;
+    domainId?: string;
+    expiresAt?: string;
+    oneTimeUse?: boolean;
     slug?: string;
     deepLink?: string | null;
     redirects?: {
@@ -49,6 +78,7 @@ export type CreateLinkInput = {
         android?: string | null;
         web?: string | null;
         forceWeb?: boolean;
+        desktopMode?: 'web' | 'hosted';
     };
     utm?: Partial<Record<UTMField, string>>;
     utmPresetId?: string;
@@ -58,6 +88,18 @@ export type CreateLinkInput = {
     customData?: Record<string, string | number | boolean | null | undefined>;
     og?: { title?: string; description?: string; imageUrl?: string };
 };
+
+export interface CreatedLink {
+    id: string;
+    app_id: string;
+    domain_id: string | null;
+    environment_id?: string | null;
+    surface_id?: string | null;
+    expires_at?: string | null;
+    one_time_use?: 0 | 1;
+    slug: string;
+    slugUrl: string;
+}
 
 export type UpdateLinkInput = Partial<Pick<Link,
     'deep_link_path' | 'ios_custom_url' | 'android_custom_url' | 'web_fallback_url' | 'allow_param_passthrough' | 'force_redirect_web' | 'og_title' | 'og_description' | 'og_image_url' | 'utm' | 'utm_override' | 'enabled'

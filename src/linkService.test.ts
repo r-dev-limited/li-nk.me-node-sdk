@@ -3,6 +3,26 @@ import type { HttpClient } from './http';
 import { mock, instance, verify, deepEqual, when } from 'ts-mockito';
 
 describe('LinkService', () => {
+    it('forwards surface/domain/lifecycle options and retains scoped response metadata', async () => {
+        const request = jest.fn().mockResolvedValue({ id: 'new', app_id: 'app_1', domain_id: 'domain-1', environment_id: 'prod', surface_id: 'customer', expires_at: '2030-01-01T00:00:00Z', one_time_use: 1, slug: 'new', slugUrl: 'https://h/customer/i/new' });
+        const service = new LinkService({ request } as unknown as HttpClient);
+        const result = await service.createLink({ appId: 'app_1', surfaceId: 'customer', domainId: 'domain-1', expiresAt: '2030-01-01T00:00:00Z', oneTimeUse: true, redirects: { desktopMode: 'hosted' } });
+        expect(JSON.parse(request.mock.calls[0][1].body)).toMatchObject({ surface_id: 'customer', domain_id: 'domain-1', expires_at: '2030-01-01T00:00:00Z', one_time_use: true, redirects: { desktopMode: 'hosted' } });
+        expect(result).toMatchObject({ environment_id: 'prod', surface_id: 'customer', expires_at: '2030-01-01T00:00:00Z', one_time_use: 1 });
+    });
+
+    it('rejects unsupported creation options before making a request', async () => {
+        const request = jest.fn();
+        const service = new LinkService({ request } as unknown as HttpClient);
+        await expect(service.createLink({ appId: 'app_1', surface_id: 'misspelled' } as any)).rejects.toThrow();
+        expect(request).not.toHaveBeenCalled();
+    });
+
+    it('retains environment, surface and lifecycle metadata when reading a link', async () => {
+        const request = jest.fn().mockResolvedValue({ id: 'id', app_id: 'app', slug: 's', allow_param_passthrough: 1, force_redirect_web: 0, enabled: 1, click_count: 0, environment_id: 'prod', surface_id: 'customer', path_prefix: '/customer', expires_at: '2030-01-01T00:00:00Z', one_time_use: 1, consumed_at: null });
+        const result = await new LinkService({ request } as unknown as HttpClient).getLink('id');
+        expect(result).toMatchObject({ environment_id: 'prod', surface_id: 'customer', path_prefix: '/customer', expires_at: '2030-01-01T00:00:00Z', one_time_use: 1, consumed_at: null });
+    });
     it('forwards UTM override flags to the Edge API', async () => {
         const requests: Array<{ path: string; init?: RequestInit }> = [];
         const http: HttpClient = {
