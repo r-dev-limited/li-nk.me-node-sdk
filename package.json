@@ -52,16 +52,22 @@
   ],
   "devDependencies": {
     "@types/jest": "^30.0.0",
-    "jest": "^30.5.1",
+    "jest": "^30.5.2",
+    "minimatch": "11.0.8",
     "rimraf": "^6.1.3",
-    "ts-jest": "^29.4.12",
+    "ts-jest": "^29.4.15",
     "ts-mockito": "^2.6.1",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "deepmerge": "file:vendor/deepmerge-linkme-4.3.2+linkme.1.tgz"
+  },
+  "overrides": {
+    "glob": "14.0.6",
+    "minimatch": "11.0.8"
   },
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
-    "zod": "^4.5.4"
+    "zod": "^4.6.7"
   }
 }

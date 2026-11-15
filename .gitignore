@@ -1,4 +1,6 @@
 dist-cjs/
 node_modules/
 dist/
+!vendor/deepmerge-linkme/dist/
+!vendor/deepmerge-linkme/dist/**
 coverage/
